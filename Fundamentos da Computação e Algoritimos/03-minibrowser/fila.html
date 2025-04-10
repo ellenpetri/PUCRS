@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        console.log('[Fila/Queue]');
+        //Um atrás do outro - ordem importa
+        //Quem entra primeiro, sai primeiro da fila
+    
+        var fila = [
+            'JS1', 'CSS2', 'C#'
+        ];
+    
+        fila.push("add alguém na fila por último");
+    
+        //Remove o primeiro da fila
+        fila.shift();
+        
+        ////==========
+        // Receita pra criar fila
+
+        //- Adicionar alguém na fila - enqueue
+        //-Remover alguém da fila - dequeue
+
+        class Queue{
+            constructor(){
+                this.data = [];
+            }
+            print(){
+                console.log(this.data);
+            }
+            enqueue(item){
+                this.data.push(item)
+            }
+            dequeue(){
+                this.data.shift();
+            }
+        }
+
+        var requests = new Queue();
+
+        //open closed
+        //Open pra extensão
+        //Closed pra modificação
+        requests.enqueue('JS1');
+        requests.dequeue('JS1');
+        requests.enqueue('CSS2');
+        requests.enqueue('C#');
+        requests.enqueue('MongoDB');
+        requests.print();
+
+
+
+
+    </script>
+</body>
+</html>
