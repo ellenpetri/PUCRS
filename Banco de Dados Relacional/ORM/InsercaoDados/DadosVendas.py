@@ -22,6 +22,7 @@ engine = sa.create_engine("sqlite:///BancoDados/vendas.db")
 sessao = orm.sessionmaker(bind=engine)
 sessao = sessao()
 
+#Inserindo informações na TBVendedor varrendo linha por linha do CSV
 for i in range(len(tbVendedor)):
     dados_vendedor = tbVendas.vendedor(
         registro_vendedor = int(tbVendedor['Registro Vendedor'][i]),
@@ -39,3 +40,5 @@ for i in range(len(tbVendedor)):
         sessao.rollback()
 
 print('Dados Inseridos na tabela vendas')
+
+#Inserindo informações na TBProduto em massa (utilizado se não precisar validar)
