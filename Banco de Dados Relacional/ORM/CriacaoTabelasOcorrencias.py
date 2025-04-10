@@ -28,8 +28,8 @@ class Municipio(base):
     __tablename__ = "tbMunicipio"
     
     codIBGE = sa.Column(sa.INTEGER, primary_key=True, index=True) 
-    municipio = sa.column(sa.VARCHAR(100), nullable=False)
-    regiao = sa.column(sa.VARCHAR(25), nullable=False)  
+    municipio = sa.Column(sa.VARCHAR(100), nullable=False)
+    regiao = sa.Column(sa.VARCHAR(25), nullable=False)  
 
 #Agora as tabelas que possuem chave estrangeira de tabelas que já criamos
 
@@ -37,10 +37,10 @@ class Municipio(base):
 class Ocorrencias(base):
     __tablename__ = "tbOcorencias"
     
-    indRegistro = sa.column(sa.INTEGER, primary_key=True, index=True)
-    codDP = sa.column(sa.INTEGER, sa.ForeignKey("tbDp.codDP", ondelete="NO ACTION", onupdate="CASCADE"), index=True)
-    codIBGE = sa.column(sa.INTEGER, sa.ForeignKey("tbMunicipio.codIBGE", ondelete="NO ACTION", onupdate="CASCADE", index=True))
-    ano = sa.column(sa.CHAR(4), nullable=False)
+    indRegistro = sa.Column(sa.INTEGER, primary_key=True, index=True)
+    codDP = sa.Column(sa.INTEGER, sa.ForeignKey("tbDp.codDP", ondelete="NO ACTION", onupdate="CASCADE"), index=True)
+    codIBGE = sa.Column(sa.INTEGER, sa.ForeignKey("tbMunicipio.codIBGE", ondelete="NO ACTION", onupdate="CASCADE"), index=True)
+    ano = sa.Column(sa.CHAR(4), nullable=False)
     mes = sa.Column(sa.VARCHAR(2), nullable=False)
     ocorrencia = sa.Column(sa.VARCHAR(100), nullable=False)
     qtde = sa.Column(sa.INTEGER, nullable=False)
