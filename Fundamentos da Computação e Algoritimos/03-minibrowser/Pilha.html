@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //PILHA - LAST IN FIRT OUT (LIFO)
+        console.log('Pilha/Stack');
+        
+        class BrowserHistoryStack{
+            constructor(){
+                this.cursor = 0;
+                this.data = [];
+            }
+
+            push(valor){
+                this.cursor = this.cursor + 1;
+                this.data.push(valor);
+            }
+            back(){ //pop
+                this.cursor = this.cursor - 1;
+                //this.data.pop();
+            }
+            clear() {
+                this.data = [];
+            }
+            print(){
+                console.log('Cursor: ', this.cursor)
+                console.log('itens atuais: ', this.data)
+            }
+        }
+
+        const history = new BrowserHistoryStack();
+
+        history.push("google.com");
+        history.push("youtube.com.br");
+        history.push("faceboook.com");
+        history.print();
+        history.back();
+        history.print();    
+
+    </script>
+</body>
+</html>

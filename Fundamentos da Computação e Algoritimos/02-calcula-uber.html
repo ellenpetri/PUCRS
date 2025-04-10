@@ -1,0 +1,35 @@
+<input placeholder="Distancia em KM" id="campoDistanciaEmKm"/>
+<input placeholder="Tempo em minutos" id="campoTempoEmMinutos"/>
+
+<button onclick="calculaCorrida()">Calcula</button>
+
+<script>
+    function formataMoeda(value)
+    {
+        return value.toFixed(2).replace('.', ',')
+    }
+
+    function calculaCorrida()
+    {
+        //Validação
+        var isCampoDistanciaKmVazio = campoDistanciaEmKm.value == ''
+        var isCampoTempoEmMinutosVazio = campoTempoEmMinutos.value == ''
+
+        if (isCampoDistanciaEmKmVazio)
+            return alert("O campo 'Distância em KM' não foi informado.");
+        else if (isCampoTempoEmMinutosVazio)
+            return alert("O campo 'Tempo em minutos' não foi informado.");
+
+
+
+        //Calculos
+        var tarifaDinamica = 1.4;
+        var distanciaKm = campoDistanciaEmKm.value * tarifaDinamica;
+        var tempoMinutos = campoTempoEmMinutos.value * 0.26;
+        var valorDaCorrida = distanciaKm + tempoMinutos;
+
+        alert("O valor da corrida é: R$ " + formataMoeda(valorDaCorrida));
+    }
+    
+
+</script>
