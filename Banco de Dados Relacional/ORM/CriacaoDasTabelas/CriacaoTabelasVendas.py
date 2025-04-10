@@ -68,8 +68,8 @@ try:
     #criar as tabelas
     base.metadata.create_all(engine)
     print("Tabelas criadas")
-except ValueError:
-    ValueError()
+except Exception as e:
+    print(f"Erro ao criar a tabela vendas: {e}")
 
 
 
