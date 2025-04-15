@@ -11,9 +11,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from CriacaoDasTabelas import CriacaoTabelasVendas as tbVendas
 
 
-arquivo_vendedor_csv = r"D:\0. Pessoal\0. Git\PUCRS\Banco de Dados Relacional\ORM\InsercaoDados\ArquivoDados\Dados Vendedor.csv"
+csvVendedor = r"D:\0. Pessoal\0. Git\PUCRS\Banco de Dados Relacional\ORM\InsercaoDados\ArquivoDados\Dados Vendedor.csv"
 
-vendedor = pd.read_csv(arquivo_vendedor_csv, sep=";")
+vendedor = pd.read_csv(csvVendedor, sep=";")
 
 tbVendedor = pd.DataFrame(vendedor)
 
@@ -37,8 +37,8 @@ for i in range(len(tbVendedor)):
         sessao.commit()
     except Exception as e:
         print(f"Erro ao inserir os dados na tabela vendas: {e}")
-        sessao.rollback()
+        
 
 print('Dados Inseridos na tabela vendas')
 
-#Inserindo informações na TBProduto em massa (utilizado se não precisar validar)
+sessao.close_all()
