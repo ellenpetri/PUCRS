@@ -14,7 +14,7 @@ csvMunicipio = pastaBase + r"\OcorrenciaMunicipio.csv"
 excelResposavelDp = pastaBase + r"\OcorrenciaResponsavelDP.xlsx"
 excelOcorrencias = pastaBase + r"\Ocorrencias.xlsx"
 
-dp = pd.read_csv(csvDp, sep=",")
+dp = pd.read_csv(csvDp, sep=";")
 municipio = pd.read_csv(csvMunicipio, sep=",")
 responsavelDp = pd.read_excel(excelResposavelDp)
 ocorrencias = pd.read_excel(excelOcorrencias)
@@ -25,15 +25,17 @@ tbMunicipioArquivo  = pd.DataFrame(municipio)
 tbOcorrenciasArquivo  = pd.DataFrame(ocorrencias)
 
 engine = sa.create_engine("sqlite:///BancoDados/ocorrencias.db")
+sessao = orm.sessionmaker(bind=engine)
+sessao = sessao()
 
 conn = engine.connect()
-metadata = sa.schema.MetaData(bind=engine)
-Sessao = orm.sessionmaker(bind=engine)
-sessao = Sessao()
+
+metadados = sa.schema.MetaData()
+metadados.reflect(bind=engine)
 
 #Inserindo os dados do DP
-DadosDp = tbDpArquivo.tp_dict(orient="records")
-tabela_DP = sa.Table(oc.dp.__tablename__, metadata, autoload = True)
+DadosDp = tbDpArquivo.to_dict(orient="records")
+tabela_DP = sa.Table(oc.Dp.__tablename__, metadados, autoload = True)
 
 try:
     conn.execute(tabela_DP.insert(), DadosDp)
@@ -43,22 +45,34 @@ except Exception as e:
 
 
 #Inserindo os dados do responsável dp
-DadosResponsavelDp = tbResposavelDPArquivo.tp_dict(orient="records")
-tabela_ResponsavelDp = sa.Table(oc.ResponsavelDP.__tablename__, metadata, autoload = True)
+DadosResponsavelDp = tbResposavelDPArquivo.to_dict(orient="records")
+tabela_ResponsavelDp = sa.Table(oc.ResponsavelDP.__tablename__, metadados, autoload = True)
 
 try:
     conn.execute(tabela_ResponsavelDp.insert(), DadosResponsavelDp)
-    sessao.commit()
+    conn.commit()
 except Exception as e:
     print(f"Erro ao inserir na tabela responsável DP: {e}")
     
     
 #Inserindo os dados do municipio
-DadosMunicipio = tbMunicipioArquivo.tp_dict(orient="records")
-tabela_Municipio = sa.Table(oc.Municipio.__tablename__, metadata, autoload = True)
+DadosMunicipio = tbMunicipioArquivo.to_dict(orient="records")
+tabela_Municipio = sa.Table(oc.Municipio.__tablename__, metadados, autoload = True)
 
 try:
     conn.execute(tabela_Municipio.insert(), DadosMunicipio)
-    sessao.commit()
+    conn.commit()
 except Exception as e:
     print(f"Erro ao inserir na tabela municipio: {e}")
+    
+#Inserindo os dados do municipio
+DadosOcorrencia = tbOcorrenciasArquivo.to_dict(orient="records")
+tabela_Ocorrencia = sa.Table(oc.Ocorrencias.__tablename__, metadados, autoload = True)
+
+try:
+    conn.execute(tabela_Ocorrencia.insert(), DadosOcorrencia)
+    conn.commit()
+except Exception as e:
+    print(f"Erro ao inserir na tabela ocorrencia: {e}")
+    
+sessao.close_all()
