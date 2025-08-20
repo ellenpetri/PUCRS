@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getPostCardAll, getPostCardById, postAddPostCard } = require('../controllers/postcards');
+const { getPostCardAll, getPostCardById, postAddPostCard, deletePostCardById } = require('../controllers/postcards');
 
 
 // [GET] Todos os postcards
@@ -37,6 +37,17 @@ router.post('/', async (req, res) => {
   } catch (err) {
     console.error('[POST /postcards] stack:', err.stack);
     res.status(err.status || 500).json({ error: err.publicMessage || 'Erro ao adicionar cartão postal.' });
+  }
+});
+
+router.delete('/:id', async (req, res) => {
+  const postId = req.params.id;
+  try {
+    await deletePostCardById(postId);
+    res.status(204).send();
+  } catch (err) {
+    console.error(err);
+    res.status(err.status || 500).json({ error: err.publicMessage || 'Erro ao deletar cartão postal.' });
   }
 });
 

@@ -88,4 +88,30 @@ async function postAddPostCard(body) {
 
     return newPostcard;
 }
-module.exports = { getPostCardAll, getPostCardById, postAddPostCard };
+
+async function deletePostCardById(id) {
+    const targetId = String(id);
+
+    try {
+        const postcards = await getPostCardAll();
+        const index = postcards.findIndex(p => String(p.id) === targetId);
+
+        if (index === -1) {
+            const err = new Error('Cartão postal não encontrado.');
+            err.status = 404;
+            err.publicMessage = 'Cartão postal não encontrado.';
+            throw err;
+        }
+
+        postcards.splice(index, 1);
+        await fs.writeFile(postcardsPath, JSON.stringify(postcards, null, 2), 'utf8');
+    } catch (err) {
+        if (!err.status) {
+            err.status = 500;
+            err.publicMessage = 'Erro ao deletar cartão postal.';
+        }
+        throw err;
+    }
+}
+
+module.exports = { getPostCardAll, getPostCardById, postAddPostCard, deletePostCardById };
