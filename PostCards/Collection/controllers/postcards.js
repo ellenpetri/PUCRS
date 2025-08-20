@@ -82,7 +82,7 @@ async function postAddPostCard(body) {
 async function deletePostCardById(id) {
     const targetId = String(id);
     const { collection, client } = await connectToDatabase();
-    
+
     try {
         const result = await collection.deleteOne({ _id: new ObjectId(targetId) });
 
@@ -105,4 +105,4 @@ async function deletePostCardById(id) {
     }
 }
 
-module.exports = { getPostCardAll, getPostCardById, postAddPostCard, deletePostCardById };
+module.exports = { getPostCardAll, getPostCardById, postAddPostCard, deletePostCardById, connectToDatabase };
