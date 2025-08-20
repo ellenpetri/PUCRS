@@ -1,40 +1,39 @@
 const fs = require('fs').promises;
 const path = require('path');
-const { v4: uuidv4 } = require('uuid');
+const { MongoClient, ObjectId  } = require('mongodb');
 const postcardsPath = path.resolve(__dirname, '..', 'postcards.json');
 
+const url = 'mongodb://localhost:27017';
+const client = new MongoClient(url);
+const dbName = 'postcardsDB';
+const collectionName = 'postcards';
+
+
 async function getPostCardAll() {
-
     try {
-        let raw;
+        await client.connect();
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
 
-        try {
-            raw = await fs.readFile(postcardsPath, 'utf8');
-            if (!raw.trim()) raw = '[]';
-        } catch (err) {
-            if (err.code === 'ENOENT') {
-                await fs.writeFile(postcardsPath, '[]', 'utf8');
-                raw = '[]';
-            } else {
-                throw err;
-            }
-        }
-
-        const data = JSON.parse(raw);
-        return Array.isArray(data) ? data : [];
+        const postcards = await collection.find({}).toArray();
+        return postcards.map(p => ({ ...p, id: p._id.toString() }));
     } catch (err) {
         err.status = 500;
         err.publicMessage = 'Falha ao ler postcards.';
         throw err;
     }
+    finally {
+        await client.close();
+    }
 }
 
 async function getPostCardById(id) {
-    const targetId = String(id);
-
     try {
-        const postcards = await getPostCardAll();
-        const postcard = postcards.find(p => String(p.id) === targetId);
+        await client.connect();
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+
+        const postcard = await collection.findOne({ _id: new ObjectId(id) });
 
         if (!postcard) {
             const err = new Error('Cartão postal não encontrado.');
@@ -42,15 +41,15 @@ async function getPostCardById(id) {
             err.publicMessage = 'Cartão postal não encontrado.';
             throw err;
         }
-
-        return postcard;
+        return { ...postcard, id: postcard._id.toString() };
     } catch (err) {
-        // [explicação] preserva 404 se já vier setado; só ajusta se não tiver status
         if (!err.status) {
             err.status = 500;
             err.publicMessage = 'Erro ao buscar cartão postal.';
         }
         throw err;
+    } finally {
+        await client.close();
     }
 }
 
@@ -64,53 +63,52 @@ async function postAddPostCard(body) {
         throw err;
     }
 
-    let raw;
+    const newPostcard = { name, cidade, pais, descricao, imageUrl };
+
     try {
-        raw = await fs.readFile(postcardsPath, 'utf8');
-        if (!raw.trim()) raw = '[]';
-    } catch (e) {
-        if (e.code === 'ENOENT') {
-            await fs.writeFile(postcardsPath, '[]', 'utf8');
-            raw = '[]';
-        } else {
-            throw e;
-        }
+        await client.connect();
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+
+        const result = await collection.insertOne(newPostcard);
+        newPostcard.id = result.insertedId.toString();
+
+        return newPostcard;
+    } catch (err) {
+        console.error('Erro ao adicionar cartão postal:', err);
+        err.status = 500;
+        throw err;
+    } finally {
+        await client.close();
     }
-
-    const postcards = JSON.parse(raw);
-    const newPostcard = {
-        id: uuidv4(),
-        name, cidade, pais, descricao, imageUrl,
-    };
-
-    postcards.push(newPostcard);
-    await fs.writeFile(postcardsPath, JSON.stringify(postcards, null, 2), 'utf8');
-
-    return newPostcard;
 }
 
 async function deletePostCardById(id) {
     const targetId = String(id);
 
     try {
-        const postcards = await getPostCardAll();
-        const index = postcards.findIndex(p => String(p.id) === targetId);
+        await client.connect();
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
 
-        if (index === -1) {
+        const result = await collection.deleteOne({ _id: new ObjectId(targetId) });
+
+        if (result.deletedCount === 0) {
             const err = new Error('Cartão postal não encontrado.');
             err.status = 404;
             err.publicMessage = 'Cartão postal não encontrado.';
             throw err;
         }
 
-        postcards.splice(index, 1);
-        await fs.writeFile(postcardsPath, JSON.stringify(postcards, null, 2), 'utf8');
+        return { message: 'Cartão postal deletado com sucesso.' };
     } catch (err) {
         if (!err.status) {
             err.status = 500;
             err.publicMessage = 'Erro ao deletar cartão postal.';
         }
         throw err;
+    } finally {
+        await client.close();
     }
 }
 
