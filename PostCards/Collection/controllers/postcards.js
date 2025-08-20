@@ -1,20 +1,20 @@
-const fs = require('fs').promises;
-const path = require('path');
-const { MongoClient, ObjectId  } = require('mongodb');
-const postcardsPath = path.resolve(__dirname, '..', 'postcards.json');
+const { MongoClient, ObjectId } = require('mongodb');
 
 const url = 'mongodb://localhost:27017';
 const client = new MongoClient(url);
 const dbName = 'postcardsDB';
 const collectionName = 'postcards';
 
+async function connectToDatabase() {
+    await client.connect();
+    const db = client.db(dbName);
+    const collection = db.collection(collectionName);
+    return {collection, client};
+};
 
 async function getPostCardAll() {
+    const {collection, client} = await connectToDatabase();
     try {
-        await client.connect();
-        const db = client.db(dbName);
-        const collection = db.collection(collectionName);
-
         const postcards = await collection.find({}).toArray();
         return postcards.map(p => ({ ...p, id: p._id.toString() }));
     } catch (err) {
@@ -28,11 +28,9 @@ async function getPostCardAll() {
 }
 
 async function getPostCardById(id) {
-    try {
-        await client.connect();
-        const db = client.db(dbName);
-        const collection = db.collection(collectionName);
+    const {collection, client} = await connectToDatabase();
 
+    try {
         const postcard = await collection.findOne({ _id: new ObjectId(id) });
 
         if (!postcard) {
@@ -65,11 +63,8 @@ async function postAddPostCard(body) {
 
     const newPostcard = { name, cidade, pais, descricao, imageUrl };
 
+    const {collection, client} = await connectToDatabase();
     try {
-        await client.connect();
-        const db = client.db(dbName);
-        const collection = db.collection(collectionName);
-
         const result = await collection.insertOne(newPostcard);
         newPostcard.id = result.insertedId.toString();
 
@@ -85,12 +80,8 @@ async function postAddPostCard(body) {
 
 async function deletePostCardById(id) {
     const targetId = String(id);
-
+    const {collection, client} = await connectToDatabase();
     try {
-        await client.connect();
-        const db = client.db(dbName);
-        const collection = db.collection(collectionName);
-
         const result = await collection.deleteOne({ _id: new ObjectId(targetId) });
 
         if (result.deletedCount === 0) {
