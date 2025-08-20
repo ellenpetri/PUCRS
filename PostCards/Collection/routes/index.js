@@ -5,12 +5,12 @@ const { getPostCardAll } = require('../controllers/postcards');
 router.get('/', async (req, res) => {
   try {
     const postcards = await getPostCardAll();
-    res.json(postcards);
+    res.render('home', { postcards });
   } catch (err) {
     console.error(err);
     res
       .status(err.status || 500)
-      .json({ error: err.publicMessage || 'Erro interno.' });
+      .render('error', { message: err.publicMessage || 'Erro interno.', error: err });
   }
 });
 

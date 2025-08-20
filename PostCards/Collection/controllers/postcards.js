@@ -1,6 +1,6 @@
 const { MongoClient, ObjectId } = require('mongodb');
 
-const url = 'mongodb://localhost:27017';
+const url = process.env.MONGO_URI;
 const client = new MongoClient(url);
 const dbName = 'postcardsDB';
 const collectionName = 'postcards';
@@ -29,6 +29,12 @@ async function getPostCardAll() {
 }
 
 async function getPostCardById(id) {
+    if (!ObjectId.isValid(id)) {
+        const err = new Error('ID inválido.');
+        err.status = 400;
+        err.publicMessage = 'ID inválido.';
+        throw err;
+    }
     const { collection, client } = await connectToDatabase();
 
     try {
@@ -80,6 +86,12 @@ async function postAddPostCard(body) {
 }
 
 async function deletePostCardById(id) {
+    if (!ObjectId.isValid(targetId)) {
+        const err = new Error('ID inválido.');
+        err.status = 400;
+        err.publicMessage = 'ID inválido.';
+        throw err;
+    }
     const targetId = String(id);
     const { collection, client } = await connectToDatabase();
 

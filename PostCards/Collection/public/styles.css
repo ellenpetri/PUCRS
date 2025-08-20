@@ -1,0 +1,68 @@
+:root{
+  --bg: #0e0f14;
+  --surface: #171923;
+  --text: #e7e9f1;
+  --muted: #aeb3c2;
+  --card: #1b1e2a;
+  --shadow: rgba(0,0,0,.35);
+
+  /* Pastéis */
+  --pastel-pink: #f8c8dc;
+  --pastel-purple: #c8b6ff;
+  --pastel-blue: #b8e0ff;
+  --pastel-green: #c8f7dc;
+  --pastel-yellow: #ffe8a3;
+}
+
+*{ box-sizing: border-box; }
+html,body{ height:100%; }
+body.app{
+  margin:0; background: var(--bg); color: var(--text);
+  font: 500 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial;
+}
+
+.topbar{
+  max-width: 1200px; margin: 28px auto 12px; padding: 0 20px;
+}
+.topbar h1{ margin:0 0 6px; font-weight:800; letter-spacing:.2px; }
+.topbar p{ margin:0; color: var(--muted); }
+
+.grid{
+  max-width: 1200px; margin: 0 auto; padding: 16px 20px 32px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 18px;
+}
+
+.card{
+  background: linear-gradient(180deg, var(--card), var(--surface));
+  border-radius: 16px; overflow: hidden; box-shadow: 0 10px 24px var(--shadow);
+  border: 1px solid rgba(255,255,255,.04); transition: transform .2s ease, box-shadow .2s ease;
+}
+.card:hover{ transform: translateY(-3px); box-shadow: 0 16px 30px var(--shadow); }
+
+.thumb{ height:150px; overflow:hidden; }
+.thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+
+.meta{ padding: 14px 14px 16px; }
+.meta h2{ margin:0 0 6px; font-size: 18px; }
+.meta .desc{ margin:8px 0 0; color: var(--muted); font-size: 14px; }
+
+.badge{
+  display:inline-block; margin-top: 2px; padding: 4px 10px; border-radius: 999px;
+  font-size: 12px; color: #14151c; font-weight:700;
+  background: linear-gradient(90deg, var(--pastel-pink), var(--pastel-purple), var(--pastel-blue), var(--pastel-green), var(--pastel-yellow));
+}
+
+.empty{
+  grid-column: 1 / -1; opacity: .7; text-align: center; padding: 60px 0;
+  background: repeating-linear-gradient(45deg, transparent, transparent 12px, rgba(255,255,255,.03) 12px, rgba(255,255,255,.03) 24px);
+  border-radius: 14px; border: 1px dashed rgba(255,255,255,.08);
+}
+
+.foot{
+  border-top: 1px solid rgba(255,255,255,.05);
+  padding: 16px 20px; color: var(--muted);
+  max-width: 1200px; margin: 0 auto 28px;
+}
+.foot a{ color: var(--pastel-purple); text-decoration: none; }
+.foot a:hover{ text-decoration: underline; }

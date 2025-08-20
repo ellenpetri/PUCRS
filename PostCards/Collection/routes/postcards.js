@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { getPostCardAll, getPostCardById, postAddPostCard, deletePostCardById } = require('../controllers/postcards');
 
-
-// [GET] Todos os postcards
 router.get('/', async (req, res) => {
   try {
     const postcards = await getPostCardAll();
@@ -14,7 +12,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// [GET] Postcard por ID
 router.get('/:id', async (req, res) => {
   const postId = req.params.id;
   try {

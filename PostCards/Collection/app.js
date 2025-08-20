@@ -18,6 +18,15 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:", "http:"],
+      styleSrc: ["'self'", "'unsafe-inline'"], // se estiver usando CSS inline
+    },
+  })
+);
 app.use(compression());
 app.use(logger('dev'));
 app.use(express.json());
