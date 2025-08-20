@@ -9,11 +9,12 @@ async function connectToDatabase() {
     await client.connect();
     const db = client.db(dbName);
     const collection = db.collection(collectionName);
-    return {collection, client};
+    return { collection, client };
 };
 
 async function getPostCardAll() {
-    const {collection, client} = await connectToDatabase();
+    const { collection, client } = await connectToDatabase();
+
     try {
         const postcards = await collection.find({}).toArray();
         return postcards.map(p => ({ ...p, id: p._id.toString() }));
@@ -28,7 +29,7 @@ async function getPostCardAll() {
 }
 
 async function getPostCardById(id) {
-    const {collection, client} = await connectToDatabase();
+    const { collection, client } = await connectToDatabase();
 
     try {
         const postcard = await collection.findOne({ _id: new ObjectId(id) });
@@ -62,8 +63,8 @@ async function postAddPostCard(body) {
     }
 
     const newPostcard = { name, cidade, pais, descricao, imageUrl };
+    const { collection, client } = await connectToDatabase();
 
-    const {collection, client} = await connectToDatabase();
     try {
         const result = await collection.insertOne(newPostcard);
         newPostcard.id = result.insertedId.toString();
@@ -80,7 +81,8 @@ async function postAddPostCard(body) {
 
 async function deletePostCardById(id) {
     const targetId = String(id);
-    const {collection, client} = await connectToDatabase();
+    const { collection, client } = await connectToDatabase();
+    
     try {
         const result = await collection.deleteOne({ _id: new ObjectId(targetId) });
 
