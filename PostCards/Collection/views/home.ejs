@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Postcards</title>
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+
+<body class="app">
+    <header class="topbar">
+        <h1>Postcards</h1>
+        <p>Explorando lugares</p>
+    </header>
+
+    <main class="grid">
+        <% if (postcards && postcards.length) { %>
+            <% postcards.forEach(p=> { %>
+                <article class="card">
+                    <div class="thumb">
+                        <img src="<%- p.imageUrl %>" alt="" loading="lazy" />
+                    </div>
+                    <div class="meta">
+                        <h2>
+                            <%= p.name %>
+                        </h2>
+                        <span class="badge">
+                            <%= p.cidade %> · <%= p.pais %>
+                        </span>
+                        <p class="desc">
+                            <%= p.descricao %>
+                        </p>
+                    </div>
+                </article>
+                <% }) %>
+                    <% } else { %>
+                        <div class="empty">Nenhum cartão cadastrado ainda.</div>
+                        <% } %>
+    </main>
+
+    <footer class="foot">
+        <span>PUCRS · <a href="https://github.com/ellenpetri/PUCRS" target="_blank" rel="noreferrer">GitHub</a></span>
+    </footer>
+</body>
+
+</html>
