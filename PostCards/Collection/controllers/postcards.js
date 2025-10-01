@@ -86,13 +86,14 @@ async function postAddPostCard(body) {
 }
 
 async function deletePostCardById(id) {
+    const targetId = String(id);
+
     if (!ObjectId.isValid(targetId)) {
         const err = new Error('ID inválido.');
         err.status = 400;
         err.publicMessage = 'ID inválido.';
         throw err;
     }
-    const targetId = String(id);
     const { collection, client } = await connectToDatabase();
 
     try {
