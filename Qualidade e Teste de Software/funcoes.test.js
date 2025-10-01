@@ -21,7 +21,7 @@ test('dividirDoisValores 0 / 10 = 0', () => {
     expect(funcoes.dividirDoisValores(0, 10)).toBe(0);
 });
 test('dividirDoisValores 0 / 0 = NaN', () => {
-    expect(funcoes.dividirDoisValores(0, 0)).toBe(NaN);
+    expect(funcoes.dividirDoisValores(0, 0)).toBeNaN();
 });
 test('somarDoisValores -1 + -1 = -2', () => {
     expect(funcoes.somarDoisValores(-1, -1)).toBe(-2);
