@@ -1,0 +1,16 @@
+{
+  "name": "qualidade-e-teste-de-software",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "@types/jest": "^29.5.2"
+  },
+  "dependencies": {}
+}
